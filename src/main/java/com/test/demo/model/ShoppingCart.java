@@ -1,31 +1,32 @@
 package com.test.demo.model;
 
+import java.util.ArrayList;
+
 public class ShoppingCart {
-    int userId;
-    int productId;
-    int productName;
+    User user;
+    ArrayList<Product> products;
 
-    public int getUserId() {
-        return userId;
+    public ShoppingCart() {
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public ShoppingCart(User user, ArrayList<Product> products) {
+        this.user = user;
+        this.products = products;
     }
 
-    public int getProductId() {
-        return productId;
+    public User getUser() {
+        return user;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public int getProductName() {
-        return productName;
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 
-    public void setProductName(int productName) {
-        this.productName = productName;
+    public void setProducts(ArrayList<Product> products) {
+        this.products = products;
     }
 }

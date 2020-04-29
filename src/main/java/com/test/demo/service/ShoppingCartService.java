@@ -1,25 +1,30 @@
 package com.test.demo.service;
 
 import com.test.demo.model.Product;
+import com.test.demo.model.ShoppingCart;
+import com.test.demo.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class ShoppingCartService {
-    private Map<Integer, ArrayList<Product>> shoppingCart= new HashMap<>();
+    private Map<Integer, ShoppingCart> shoppingCarts = new HashMap<>();
 
-    public boolean addItem(int userId, Product product) {
-        ArrayList cart = shoppingCart.getOrDefault(userId, new ArrayList<Product>());
-        cart.add(product);
-        shoppingCart.put(userId, cart);
+    public boolean addItem(User user, Product product) {
+        ShoppingCart cart = shoppingCarts.getOrDefault(user.getId(), new ShoppingCart(user, new ArrayList<>()));
+        cart.getProducts().add(product);
+        shoppingCarts.put(user.getId(), cart);
         return true;
     }
 
-    public ArrayList<Product> getShoppingCart(int userId) {
-        return shoppingCart.getOrDefault(userId, new ArrayList<>());
+    public ShoppingCart getShoppingCart(int userId) {
+        return shoppingCarts.getOrDefault(userId, new ShoppingCart());
+    }
+
+    public Map<Integer, ShoppingCart> getShoppingCart() {
+        return shoppingCarts;
     }
 }

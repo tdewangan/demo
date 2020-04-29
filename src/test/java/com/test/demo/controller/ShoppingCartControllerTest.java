@@ -6,6 +6,7 @@ import static org.springframework.test.web.client.match.MockRestRequestMatchers.
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.test.demo.model.Product;
 import com.test.demo.model.User;
@@ -27,9 +28,11 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootTest
 public class ShoppingCartControllerTest {
@@ -72,9 +75,9 @@ public class ShoppingCartControllerTest {
         when(restTemplate.getForEntity("https://reqres.in/api/users?page=2", UserData.class))
                 .thenReturn(new ResponseEntity(data, HttpStatus.OK));
         HashMap map = new HashMap();
-        map.put(7, Arrays.asList(product));
+        map.put(user, Arrays.asList(product));
         when(productService.getProducts()).thenReturn(map);
-        when(shoppingCartService.addItem(7, product)).thenReturn(true);
+        when(shoppingCartService.addItem(user, product)).thenReturn(true);
         mockServer.expect(ExpectedCount.once(),
                 requestTo(new URI("/addItem/7/1")))
                 .andExpect(method(HttpMethod.GET))
@@ -82,5 +85,21 @@ public class ShoppingCartControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(mapper.writeValueAsString(products))
                 );
+    }
+
+    @Test
+    public void getProducts_shouldReturnProducts() throws Exception {
+        mockServer = MockRestServiceServer.createServer(restTemplate);
+        Map<Integer, Product> products = new HashMap<>();
+        products.put(1, new Product(1, "Toothpaste"));
+        products.put(2, new Product(2, "Rice"));
+        when(productService.getProducts()).thenReturn(products);
+
+        mockServer.expect(ExpectedCount.once(),
+                requestTo(new URI("/products")))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(mapper.writeValueAsString(products)));
     }
 }
