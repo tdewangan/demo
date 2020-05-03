@@ -21,7 +21,7 @@ public class ShoppingCartService {
     }
 
     public ShoppingCart getShoppingCart(int userId) {
-        return shoppingCarts.getOrDefault(userId, new ShoppingCart());
+        return shoppingCarts.getOrDefault(userId, new ShoppingCart(new User(userId), new ArrayList<>()));
     }
 
     public Map<Integer, ShoppingCart> getShoppingCart() {
